@@ -15,6 +15,7 @@ trait Perceptron {
   }
 
   def predict(data: Array[Double]): Double
+  def derivative(data: Array[Double]): Double
 
   def forward(data: Array[Double]): Double = {
     input = data.clone()
@@ -34,13 +35,19 @@ trait Perceptron {
 
 case class SimplePerceptron(size: Int, rate: Double) extends Perceptron {
   def predict(data: Array[Double]): Double = if (sum(data) >= 0.0) 1.0 else 0.0
+  def derivative(data: Array[Double]): Double = 0
 }
 
 case class DoublePerceptron(size: Int, rate: Double) extends Perceptron {
   def predict(data: Array[Double]): Double = sum(data)
+  def derivative(data: Array[Double]): Double = 0
 }
 
 case class SigmoidPerceptron(size: Int, rate: Double) extends Perceptron {
   def predict(data: Array[Double]): Double = 1.0 / ( 1.0 + scala.math.exp( -sum(data) ) )
+  def derivative(data: Array[Double]): Double = {
+    val p = predict(data)
+    p * (1-p)
+  }
 }
 
